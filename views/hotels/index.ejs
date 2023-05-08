@@ -1,0 +1,37 @@
+<%- include('../partials/header.ejs') %>
+<link rel="stylesheet" href="/stylesheets/main.css">
+<%- include('../partials/paginate.ejs') %>
+<div class="row">
+    <div class="col-4">
+        <div class="input-group mb-3">
+            <span class="input-group-text btn btn-danger" id="basic-addon1">Check</span>
+            <input type="text" class="form-control" placeholder="Search Hotel" aria-label="Username"
+                aria-describedby="basic-addon1" id="searchInput" onkeyup="searchHotel()">
+        </div>
+    </div>
+</div>
+
+<h1>List of All Hotels</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <% for(let hotel of hotels.docs) { %>
+    <div class="col">
+        <div class="card h-100">
+            <img src="<%= hotel.image %>" class="card-img-top " alt="<%= hotel.name %>">
+            <div class="card-body">
+                <h5 class="card-title"><%= hotel.name %></h5>
+                <p class="card-text"><%= hotel.description %></p>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-info" href="/hotels/<%= hotel._id %>">Read More</a>
+                <a class="btn btn-primary" href="/hotels/<%= hotel._id %>">CheckOut</a>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+
+<script src="/scripts/app.js"></script>
+<%- include('../partials/footer.ejs') %>
+
+

@@ -1,0 +1,68 @@
+<%- include('./partials/header.ejs') %>
+
+<main>
+  <section class="hero-section">
+    <h1 class=rosh>Welcome to Hotel Paradise</h1>
+    <p>Experience the luxury and comfort of our premium rooms and amenities.</p>
+    <button>Book Now</button>
+  </section>
+
+  <section class="features-section">
+    <div class="feature">
+      <i class="fas fa-swimming-pool"></i>
+      <h3>Swimming Pool</h3>
+      <p>Take a dip in our outdoor pool and enjoy the scenic views.</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-utensils"></i>
+      <h3>Restaurant</h3>
+      <p>Savor the flavors of our delicious cuisine and enjoy a fine dining experience.</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-spa"></i>
+      <h3>Spa</h3>
+      <p>Relax and rejuvenate at our luxurious spa and wellness center.</p>
+    </div>
+  </section>
+
+  <section class="gallery-section">
+    <h2 class="rose">Photo Gallery</h2>
+    <div class="gallery">
+      <img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDd8fGhvdGVsfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60/400x300" alt="">
+      <img src="https://images.unsplash.com/photo-1589923158776-cb4485d99fd6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80/400x300" alt="">
+      <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80/400x300" alt="">
+      <img src="https://images.unsplash.com/photo-1573052905904-34ad8c27f0cc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80/400x300" alt="">
+      <img src="https://images.unsplash.com/photo-1462539405390-d0bdb635c7d1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1820&q=80/400x300" alt="">
+      <img src="https://images.unsplash.com/photo-1587213811864-46e59f6873b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80/400x300" alt="">
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <h2 class="beauty">Contact Us</h2>
+    <form>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+</main>
+
+<%- include('./partials/footer.ejs') %>
+
+<script>
+    const images = document.querySelectorAll('.gallery img');
+
+images.forEach(img => {
+  img.addEventListener('click', () => {
+    img.classList.toggle('clicked');
+  });
+});
+
+</script>

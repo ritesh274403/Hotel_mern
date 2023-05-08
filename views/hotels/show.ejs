@@ -1,0 +1,139 @@
+<%- include('../partials/header.ejs') %>
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+<link rel="stylesheet" href="/stylesheets/stars.css">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+    }
+    .selected{
+        color: red;
+    }
+</style>
+<div class="hotel-details">
+    <div style="text-decoration: darkturquoise;"><%= hotel.name %></div>
+    <div style="text-transform: capitalize;"><%= hotel.address %></div>
+    <div><%= hotel.price %></div>
+    <div><%= hotel.isRoomAvailable %></div>
+    <div><%= hotel.overAllRating %></div>
+    <div><a href="/users/<%= hotel.author._id %>"><%= hotel.author.username %></a></div>
+    <div><%= hotel.createdAt.toDateString() %></div>
+</div>
+<div class="row">
+    <div class="col-8">
+        <div id="carouselExampleControls">
+            <div class="row m-3">
+                <% for(let i in hotel.images){ %>
+                <% if (i == 0) { %>
+                <div class="col  ">
+                    <img src="<%= hotel.images[i].url %>" class="img-fluid d-block w-100" alt="...">
+                    
+                </div>
+                <!-- <% } else { %> --> -->
+                 <!-- <div class="col-5"> -->
+                    <!-- <img src="<%= hotel.images[i].url %>" class="img-fluid " alt="..."> -->
+                <!-- </div> --> -->
+                 <!-- <% } %>  -->
+                <% } %>
+            </div>
+            <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button> -->
+        </div>
+    </div>
+    <div class="col-4 ">
+        <div id="map"></div>
+    </div>
+</div>
+<div>
+    <a href="/hotels/<%= hotel._id %>/upvote"><i class="fs-2 bi bi-hand-thumbs-up-fill"></i></a>
+    <a href="/hotels/<%= hotel._id %>/downvote"><i class="fs-2 bi bi-hand-thumbs-down-fill"></i></a>
+</div>
+<% if (currentUser && hotel.author._id.equals(currentUser._id)) { %>
+<div><a class="btn btn-info d-flex flex-row mb-3" href="/hotels/<%= hotel._id %>/edit">edit</a></div>
+<form action="/hotels/<%= hotel._id %>?_method=DELETE" method="post">
+    <input class="btn btn-danger" type="submit" value="delete">
+</form>
+<% } %>
+<div class="row">
+    <div class="col-3">
+        <form class="mt-5 needs-validation" action="/hotels/<%= hotel._id %>/reviews" method="post" novalidate>
+            <fieldset class="starability-basic">
+                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+                    aria-label="No rating." />
+                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                <label for="first-rate1" title="Terrible">1 star</label>
+                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                <label for="first-rate2" title="Not good">2 stars</label>
+                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                <label for="first-rate3" title="Average">3 stars</label>
+                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                <label for="first-rate4" title="Very good">4 stars</label>
+                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                <label for="first-rate5" title="Amazing">5 stars</label>
+            </fieldset>
+            <div class="form-floating mb-3">
+                <input name="review[body]" type="text" class="form-control" id="price" placeholder="review body"
+                    required>
+                <label for="price">Hotel Review Body</label>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please enter some text.
+                </div>
+            </div>
+            <input class=" mt-2 btn btn-primary" type="submit" value="add review">
+        </form>
+        <h1>all reviews</h1>
+        <% for(let review of hotel.reviews) { %>
+        <div><%= review.body %> </div>
+        <p class="starability-result" data-rating="<%= review.rating %>"></p>
+        <div><%= review.author.name %></div>
+        <% if (currentUser && review.author._id.equals(currentUser._id)) { %>
+        <form action="/hotels/<%= hotel._id %>/reviews/<%= review._id %>?_method=DELETE" method="post">
+            <input type="submit" class="btn btn-sm btn-danger" value="delete">
+        </form>
+        <% } %>
+        <% } %>
+    </div>
+</div>
+<hr>
+
+<script>
+    let arr = [];
+    arr.push( <%-coordinates[0] %> );
+    arr.push( <%-coordinates[1] %> );
+    mapboxgl.accessToken =
+        'pk.eyJ1Ijoic2hpdmFtMTIzYSIsImEiOiJjbGhiYTgxYW0wcGs0M2NsdGExdzlkejlxIn0.ABog-emI69lzkss8tHTdXQ';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+        style: 'mapbox://styles/mapbox/outdoors-v12', // style URL
+        center: arr, // starting position [lng, lat]
+        zoom: 10 // starting zoom
+    });
+    const marker1 = new mapboxgl.Marker()
+        .setLngLat(arr)
+        .setPopup(new mapboxgl.Popup()
+            .setHTML('<h4><%=hotel.name%></h4><p><%=hotel.address%></p>'))
+        .addTo(map);
+</script>
+<script src="/scripts/form-validation.js"></script>
+<!-- overall rating : total sum of ratings / no of ratings -->
+<%- include('../partials/footer.ejs') %>
