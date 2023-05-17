@@ -211,7 +211,6 @@ router.get('/hotels/:id/downvote', isLoggedIn, async (req, res) => {
 
 
 
-
 router.get('/hotels/:id/checkout/success', (req, res) => {
 	res.send('payment done');
 });
@@ -240,6 +239,7 @@ router.get('/hotels/:id/checkout', isLoggedIn, async (req, res) => {
 		mode: 'payment',
 		success_url: `${process.env.URL_SERV}/hotels/${hotel._id}/checkout/success`,
 		cancel_url: 'http://localhost:5005/cancel'
+		
 	});
 	res.redirect(session.url);
 });
